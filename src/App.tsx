@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {ChevronDown, CheckCircle2, PhoneIncoming, Home } from 'lucide-react';
+import {ChevronDown, CheckCircle2, PhoneIncoming, Home, Copy } from 'lucide-react';
 
 function App() {
   const [email, setEmail] = useState('');
@@ -18,166 +18,241 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Основной S-образный градиент */}
-      <div className="absolute inset-0 bg-[linear-gradient(295deg,_#fafafa_20%,_#166534_50%)]"></div>
-      
-      {/* Декоративные полосы справа (белые) */}
-      <div className="absolute right-0 top-0 w-1/2 h-full">
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={`white-line-${i}`}
-              className="absolute h-[2px] bg-[#fafafa] transform rotate-12"
-              style={{
-                width: '140%',
-                top: `${15 + i * 20}%`,
-                right: `-20%`,
-                opacity: 0.7,
-              }}
-            ></div>
-          ))}
+    <div className="min-h-screen overflow-x-hidden">
+      {/* Hero Section с собственным фоном */}
+      <div className="relative bg-gradient-to-b from-[#166534] via-[#166534] to-white overflow-x-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,_var(--tw-gradient-stops))] from-transparent via-white/0 to-white"></div>
+        
+        {/* Декоративные полосы справа (белые) */}
+        <div className="absolute right-0 top-0 w-1/2 h-full overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={`white-line-${i}`}
+                className="absolute h-[2px] bg-[#fafafa] transform rotate-12"
+                style={{
+                  width: '140%',
+                  top: `${15 + i * 20}%`,
+                  right: `-20%`,
+                  opacity: 0.7,
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
+
+        {/* Декоративные полосы слева (зеленые) */}
+        <div className="absolute left-0 top-0 w-1/2 h-full overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={`green-line-${i}`}
+                className="absolute h-[2px] bg-[#CCFF00] transform -rotate-12"
+                style={{
+                  width: '140%',
+                  top: `${45 + i * 15}%`,
+                  left: `-20%`,
+                  opacity: 0.5,
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10">
+          {/* Navigation */}
+          <nav className="container mx-auto px-6 py-4 flex items-center justify-between max-w-[1440px]">
+            <div className="flex items-center">
+              <span className="text-white text-3xl font-extrabold">
+                Снос<span className="text-[#CCFF00]">34</span>
+              </span>
+            </div>
+            
+            <div className="hidden md:flex items-center space-x-8 font-medium">
+              <a href="#" className="text-white hover:text-[#CCFF00] transition"><b>Домой</b></a>
+              <a href="#" className="text-white hover:text-[#CCFF00] transition">About</a>
+              <a href="#" className="text-white hover:text-[#CCFF00] transition">Features</a>
+              <a href="#" className="text-white hover:text-[#CCFF00] transition">Integration</a>
+              <div className="relative group">
+                <button className="text-white hover:text-[#CCFF00] transition flex items-center">
+                  Pages <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-4">
+            </div>
+          </nav>
+
+          {/* Hero Section Content */}
+          <div className="container mt-8 mx-auto px-6 pt-10 pb-24 max-w-[1440px]">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h1 className="font-black text-white leading-tight space-y-6">
+                  <div>
+                    <span className="relative text-6xl">
+                      Демонтаж
+                      <span className="absolute bottom-2 left-0 w-full h-2 bg-[#CCFF00] opacity-50 rounded"></span>
+                    </span>
+                    <span className="text-5xl font-medium"> зданий</span>
+                  </div>
+
+                  <div>
+                    <span className="relative text-6xl">
+                      Вывоз
+                      <span className="absolute bottom-2 left-0 w-full h-2 bg-[#CCFF00] opacity-50 rounded"></span>
+                    </span>
+                    <span className="text-5xl font-medium"> строительного мусора</span>
+                  </div>
+                  
+                  <div>
+                    <span className="relative text-6xl">
+                      Монтаж
+                      <span className="absolute bottom-2 left-0 w-full h-2 bg-[#CCFF00] opacity-50 rounded"></span>
+                    </span>
+                    <span className="text-5xl font-medium"> заборов</span>
+                  </div>
+                </h1>
+
+                <div className="mt-24 space-y-4">
+                  <div className="inline-flex items-center bg-white rounded-full px-6 py-3 shadow-lg">
+                    <Home className="h-5 w-5 text-[#166534] mr-2" />
+                    <span className="text-gray-800 font-medium">г. Волгоград</span>
+                  </div>
+                  
+                  <div className="inline-flex items-center bg-white rounded-full px-6 py-3 shadow-lg ml-4">
+                    <Home className="h-5 w-5 text-[#166534] mr-2" />
+                    <span className="text-gray-800 font-medium">Городищенский район</span>
+                  </div>
+
+                  <div 
+                    className="flex items-center bg-white rounded-full px-6 py-3 shadow-lg mt-6 w-fit cursor-pointer hover:bg-gray-50 transition-colors group"
+                    onClick={() => {
+                      navigator.clipboard.writeText('+7 (917) 888-88-88');
+                    }}
+                  >
+                    <PhoneIncoming className="h-5 w-5 text-[#166534] mr-2" />
+                    <span className="text-gray-800 font-medium">+7 (917) 888-88-88</span>
+                    <Copy 
+                      className="h-5 w-5 text-[#166534] ml-4 cursor-pointer hover:text-[#0f4023] transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigator.clipboard.writeText('+7 (917) 888-88-88');
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative">
+                {/* Верхнее изображение дома */}
+                <div 
+                  className="absolute -top-20 right-4 w-64 transition-transform duration-300 ease-out"
+                  style={{ 
+                    transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
+                  }}
+                >
+                  <img
+                    src="Public/Home.png"
+                    alt="Yellow house with balcony"
+                    className="w-full transition-transform"
+                  />
+                </div>
+
+                {/* Главное изображение КАМАЗа */}
+                <img
+                  src="Public/kamaz2.png"
+                  alt="Orange KAMAZ dump truck"
+                  className="rounded-2xl mx-auto w-[800px] max-w-[120%]"
+                />
+
+                {/* Нижнее изображение забора */}
+                <div 
+                  className="absolute bottom-4 left-4 w-64 transition-transform duration-300 ease-out"
+                  style={{ 
+                    transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)`,
+                  }}
+                >
+                  <img
+                    src="Public/Zabor.png"
+                    alt="Decorative fence with plants"
+                    className="w-full transition-transform"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Декоративные полосы слева (зеленые) */}
-      <div className="absolute left-0 top-0 w-1/2 h-full">
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`green-line-${i}`}
-              className="absolute h-[2px] bg-[#CCFF00] transform -rotate-12"
-              style={{
-                width: '140%',
-                top: `${45 + i * 15}%`,
-                left: `-20%`,
-                opacity: 0.5,
-              }}
-            ></div>
-          ))}
-        </div>
-      </div>
-
-      {/* S-образная разделительная линия */}
-      <div 
-        className="absolute w-[3px] h-[200%] bg-red-500 opacity-30"
-        style={{
-          left: '50%',
-          top: '-50%',
-          transform: 'rotate(-15deg)',
-          clipPath: 'path("M 0 0 Q -50 50 0 100 Q 50 150 0 200")',
-        }}
-      ></div>
-
-      {/* Существующий контент */}
-      <div className="relative z-10">
-        {/* Navigation */}
-        <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center">
-            <span className="text-white text-3xl font-extrabold">
-              Снос<span className="text-[#CCFF00]">34</span>
+      {/* Services Section */}
+      <div className="bg-white py-24">
+        <div className="container mx-auto px-6 max-w-[1440px]">
+          <h2 className="text-[2.9rem] font-bold text-black mb-16 text-center">
+            <span className="relative">
+              ВЫПОЛНЯЕМЫЕ РАБОТЫ
+              <span className="absolute bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
             </span>
-          </div>
+          </h2>
           
-          <div className="hidden md:flex items-center space-x-8 font-medium">
-            <a href="#" className="text-white hover:text-[#CCFF00] transition"><b>Домой</b></a>
-            <a href="#" className="text-white hover:text-[#CCFF00] transition">About</a>
-            <a href="#" className="text-white hover:text-[#CCFF00] transition">Features</a>
-            <a href="#" className="text-white hover:text-[#CCFF00] transition">Integration</a>
-            <div className="relative group">
-              <button className="text-white hover:text-[#CCFF00] transition flex items-center">
-                Pages <ChevronDown className="ml-1 h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-4">
-          </div>
-        </nav>
-
-        {/* Hero Section */}
-        <div className="container mt-8 mx-auto px-6 pt-20 pb-24">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="font-black text-white leading-tight space-y-6">
-                <div>
-                  <span className="relative text-6xl">
-                    Демонтаж
-                    <span className="absolute bottom-2 left-0 w-full h-2 bg-[#CCFF00] opacity-50 rounded"></span>
-                  </span>
-                  <span className="text-6xl font-medium"> зданий</span>
-                </div>
-
-                <div>
-                  <span className="relative text-6xl">
-                    Вывоз
-                    <span className="absolute bottom-2 left-0 w-full h-2 bg-[#CCFF00] opacity-50 rounded"></span>
-                  </span>
-                  <span className="text-6xl font-medium"> строительного мусора</span>
-                </div>
-                
-                <div>
-                  <span className="relative text-6xl">
-                    Монтаж
-                    <span className="absolute bottom-2 left-0 w-full h-2 bg-[#CCFF00] opacity-50 rounded"></span>
-                  </span>
-                  <span className="text-6xl font-medium"> заборов</span>
-                </div>
-              </h1>
-
-
-              <div className="pt-16 mt-16 space-y-4 font-medium">
-              <div className="flex items-center space-x-2 text-white">
-                  <PhoneIncoming className="h-5 w-5 text-[#CCFF00]" />
-                  <span>+7 (917) 888-88-88</span>
-                </div>
-                <div className="flex items-center space-x-2 text-white">
-                  <Home className="h-5 w-5 text-[#CCFF00]" />
-                  <span>Волгоград</span>
-                </div>
-                <div className="flex items-center space-x-2 text-white">
-                  <Home className="h-5 w-5 text-[#CCFF00]" />
-                  <span>Городищенский район</span>
+          <div className="flex max-w-7xl mx-auto">
+            {/* Левая колонка */}
+            <div className="w-1/2 space-y-[300px] pr-8">
+              <div className="bg-white rounded-2xl p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-2xl font-medium text-gray-800 mb-4">Снос зданий</h3>
+                  <p className="text-gray-600 text-center text-base leading-relaxed">
+                    Профессиональный демонтаж зданий и сооружений любой сложности.
+                    Гарантируем безопасность и оперативность выполнения работ.
+                  </p>
                 </div>
               </div>
 
-              
-            </div>
-
-            <div className="relative">
-              {/* Верхнее изображение дома */}
-              <div 
-                className="absolute -top-20 right-4 w-64 transition-transform duration-300 ease-out"
-                style={{ 
-                  transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)`,
-                }}
-              >
-                <img
-                  src="Public/Home.png"
-                  alt="Yellow house with balcony"
-                  className="w-full transition-transform"
-                />
+              <div className="bg-white rounded-2xl p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-2xl font-medium text-gray-800 mb-4">Вывоз мусора</h3>
+                  <p className="text-gray-600 text-center text-base leading-relaxed">
+                    Оперативный вывоз строительного мусора и отходов с объекта.
+                    Предоставляем собственный транспорт и бригаду грузчиков.
+                  </p>
+                </div>
               </div>
 
-              {/* Главное изображение КАМАЗа */}
-              <img
-                src="Public/kamaz2.png"
-                alt="Orange KAMAZ dump truck"
-                className="rounded-2xl mx-auto w-[800px] max-w-[120%]"
-              />
+              <div className="bg-white rounded-2xl p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-2xl font-medium text-gray-800 mb-4">Планировка участка</h3>
+                  <p className="text-gray-600 text-center text-base leading-relaxed">
+                    Комплексная подготовка и выравнивание территории под застройку.
+                    Работаем с участками любой сложности и размера.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-              {/* Нижнее изображение забора */}
-              <div 
-                className="absolute bottom-4 left-4 w-64 transition-transform duration-300 ease-out"
-                style={{ 
-                  transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)`,
-                }}
-              >
-                <img
-                  src="Public/Zabor.png"
-                  alt="Decorative fence with plants"
-                  className="w-full transition-transform"
-                />
+            {/* Разделительная линия */}
+            <div className="w-1 bg-[#166534] opacity-50 rounded mx-8"></div>
+
+            {/* Правая колонка */}
+            <div className="w-1/2 space-y-[300px] pl-8 pt-[250px]">
+              <div className="bg-white rounded-2xl p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-2xl font-medium text-gray-800 mb-4">Монтаж / Демонтаж забора</h3>
+                  <p className="text-gray-600 text-center text-base leading-relaxed">
+                    Установка и демонтаж заборов из различных материалов под ключ.
+                    Большой опыт работы с разными типами ограждений.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-2xl font-medium text-gray-800 mb-4">Завоз материалов</h3>
+                  <p className="text-gray-600 text-center text-base leading-relaxed">
+                    Доставка строительных материалов точно в срок на ваш объект.
+                    Работаем с любыми объемами, предоставляем все документы.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
