@@ -75,7 +75,7 @@ function App() {
         <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center">
             <span className="text-white text-3xl font-extrabold">
-              Снос<span className="text-[#CCFF00]">34</span>
+              Снос1<span className="text-[#CCFF00]">34</span>
             </span>
           </div>
           
