@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
-import { PhoneIncoming, Copy, MapPinned, Hammer, Fence, Trash, Truck, Move3D, Car, Wallet, HandCoins, FileAxis3D } from 'lucide-react';
-import { useBreakpoint } from './hooks/useBreakpoint';
+import React, { useState, useEffect } from 'react';
+import { ChevronDown, PhoneIncoming, Copy, MapPinned, Hammer, Fence, Trash, Truck, Move3D } from 'lucide-react';
 
 function App() {
+  const [email, setEmail] = useState('');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isScrolled, setIsScrolled] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
-  const [paths, setPaths] = useState<string[]>([]);
+  const [dividerHeight, setDividerHeight] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -22,26 +21,24 @@ function App() {
       } else {
         setIsScrolled(false);
       }
-    };
 
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const cardId = Number(entry.target.getAttribute('data-card-id'));
-          setVisibleCards(prev => new Set(prev).add(cardId));
+      // Расчет высоты разделительной линии
+      const servicesSection = document.getElementById('services-section');
+      if (servicesSection) {
+        const rect = servicesSection.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        if (rect.top <= viewportHeight && rect.bottom >= 0) {
+          // Элемент виден в viewport
+          const visibleHeight = Math.min(viewportHeight, rect.bottom) - Math.max(0, rect.top);
+          const percentVisible = (visibleHeight / rect.height) * 100;
+          // Ограничиваем максимальную высоту до 90%
+          setDividerHeight(Math.min(percentVisible * 1.2, 90));
+        } else {
+          setDividerHeight(0);
         }
-      });
+      }
     };
-
-    const observer = new IntersectionObserver(observerCallback, {
-      threshold: 0.2,
-      rootMargin: '50px'
-    });
-
-    // Находим все карточки и добавляем их в observer
-    document.querySelectorAll('[data-card-id]').forEach(card => {
-      observer.observe(card);
-    });
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('scroll', handleScroll);
@@ -49,35 +46,9 @@ function App() {
     // Вызываем handleScroll сразу после монтирования
     handleScroll();
 
-    const updatePaths = () => {
-      const circles = Array.from(document.querySelectorAll('.step-circle'));
-      if (circles.length < 6) return;
-
-      const newPaths = [];
-      const c1 = { x: 70, y: 100 };
-      const c2 = { x: 770, y: 200 };
-      const c3 = { x: 20, y: 450 };
-      const c4 = { x: 770, y: 600 };
-      const c5 = { x: 490, y: 800 };
-      const c6 = { x: 490, y: 1000 };
-
-      newPaths.push(`M${c1.x + 40},${c1.y + 40} C${c1.x + 50},${c1.y + 200}   ${c2.x - 50},${c2.y - 100}  ${c2.x + 40},${c2.y + 40}`);
-      newPaths.push(`M${c2.x + 40},${c2.y + 40} C${c2.x + 600},${c2.y + 350}  ${c3.x - 300},${c3.y - 150} ${c3.x + 40},${c3.y + 40}`);
-      newPaths.push(`M${c3.x + 40},${c3.y + 40} C${c3.x + 300},${c3.y + 50}   ${c4.x - 200},${c4.y}       ${c4.x + 40},${c4.y + 40}`);
-      newPaths.push(`M${c4.x + 40},${c4.y + 40} C${c4.x + 320},${c4.y + 100}  ${c5.x + 300},${c5.y + 130} ${c5.x + 40},${c5.y + 40}`);
-      newPaths.push(`M${c5.x + 40},${c5.y + 40} C${c5.x - 250},${c5.y + 20}    ${c5.x - 300},${c5.y + 200} ${c6.x + 40},${c6.y + 40}`);
-
-      setPaths(newPaths);
-    };
-
-    updatePaths();
-    window.addEventListener('resize', updatePaths);
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
-      observer.disconnect();
-      window.removeEventListener('resize', updatePaths);
     };
   }, []);
 
@@ -126,10 +97,11 @@ function App() {
         {/* Hero Content */}
         <div className="relative z-10 min-h-screen flex flex-col">
           {/* Navigation */}
-          <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled
-            ? 'bg-[#166534]/60 backdrop-blur-md shadow-lg'
-            : 'bg-transparent'
-            }`}>
+          <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+            isScrolled 
+              ? 'bg-[#166534]/60 backdrop-blur-md shadow-lg' 
+              : 'bg-transparent'
+          }`}>
             <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-[1440px]">
               <div className="flex items-center">
                 <span className="text-2xl md:text-3xl font-extrabold text-white">
@@ -145,12 +117,13 @@ function App() {
               </div>
 
               <div className="flex items-center">
-                <a
-                  href="tel:+79178888888"
-                  className={`transition-all duration-300 font-bold px-4 py-2 rounded block ${isScrolled
-                    ? 'text-[#333333] bg-white/50 hover:text-white'
-                    : 'text-white hover:text-[#CCFF00]'
-                    }`}
+                <a 
+                  href="tel:+79178888888" 
+                  className={`transition-all duration-300 font-bold px-4 py-2 rounded block ${
+                    isScrolled 
+                      ? 'text-[#333333] bg-white/50 hover:text-white' 
+                      : 'text-white hover:text-[#CCFF00]'
+                  }`}
                 >
                   +7 (917) 888-88-88
                 </a>
@@ -202,7 +175,7 @@ function App() {
                     <span className="text-gray-800 font-medium text-sm md:text-base">Городищенский район</span>
                   </div>
 
-                  <div
+                  <div 
                     className="inline-flex items-center justify-between bg-white rounded-full px-4 md:px-6 py-2 md:py-3 shadow-lg hover:bg-gray-50 transition-colors group cursor-pointer animate-fadeInUp opacity-0" style={{ animationDelay: '0.7s', animationFillMode: 'forwards' }}
                     onClick={() => window.location.href = 'tel:+79178888888'}
                   >
@@ -266,7 +239,7 @@ function App() {
           <Hammer className="absolute w-20 h-20 lg:w-32 lg:h-32 text-gray-400 left-[5%] top-[10%] transform -rotate-12" strokeWidth={1} />
           <Truck className="absolute w-16 h-16 lg:w-28 lg:h-28 text-gray-400 left-[15%] top-[40%] transform rotate-6" strokeWidth={1} />
           <Trash className="absolute w-14 h-14 lg:w-24 lg:h-24 text-gray-400 left-[8%] top-[70%] transform -rotate-12" strokeWidth={1} />
-
+          
           {/* Правая сторона */}
           <Move3D className="absolute w-20 h-20 lg:w-32 lg:h-32 text-gray-400 right-[10%] top-[15%] transform rotate-12" strokeWidth={1} />
           <Fence className="absolute w-16 h-16 lg:w-28 lg:h-28 text-gray-400 right-[5%] top-[45%] transform -rotate-6" strokeWidth={1} />
@@ -302,60 +275,36 @@ function App() {
             {/* Левая колонка */}
             <div className="w-full lg:w-1/2 space-y-8 lg:space-y-[300px] pl-16 lg:pl-0 lg:pr-8 relative">
               {/* Карточки услуг */}
-              <div
-                data-card-id="1"
-                className={`transform transition-all duration-1000 ${visibleCards.has(1)
-                  ? 'opacity-100 translate-x-0'
-                  : 'opacity-0 -translate-x-20'
-                  }`}
-              >
-                <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
-                  <div className="flex flex-col items-center justify-center w-full">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Снос зданий</h3>
-                    <Hammer className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
-                    <p className="text-gray-600 text-center">
-                      Профессиональный демонтаж зданий и сооружений любой сложности.
-                      Гарантируем безопасность и оперативность выполнения работ.
-                    </p>
-                  </div>
+              <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Снос зданий</h3>
+                  <Hammer className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
+                  <p className="text-gray-600 text-center">
+                    Профессиональный демонтаж зданий и сооружений любой сложности.
+                    Гарантируем безопасность и оперативность выполнения работ.
+                  </p>
                 </div>
               </div>
 
-              <div
-                data-card-id="2"
-                className={`transform transition-all duration-1000 delay-200 ${visibleCards.has(2)
-                  ? 'opacity-100 translate-x-0'
-                  : 'opacity-0 -translate-x-20'
-                  }`}
-              >
-                <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
-                  <div className="flex flex-col items-center justify-center w-full">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 text-gray-800 mb-4">Вывоз мусора</h3>
-                    <Trash className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
-                    <p className="text-gray-600 text-center">
-                      Оперативный вывоз строительного мусора и отходов с объекта.
-                      Предоставляем собственный транспорт и бригаду грузчиков.
-                    </p>
-                  </div>
+              <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 text-gray-800 mb-4">Вывоз мусора</h3>
+                  <Trash className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
+                  <p className="text-gray-600 text-center">
+                    Оперативный вывоз строительного мусора и отходов с объекта.
+                    Предоставляем собственный транспорт и бригаду грузчиков.
+                  </p>
                 </div>
               </div>
 
-              <div
-                data-card-id="3"
-                className={`transform transition-all duration-1000 delay-400 ${visibleCards.has(3)
-                  ? 'opacity-100 translate-x-0'
-                  : 'opacity-0 -translate-x-20'
-                  }`}
-              >
-                <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
-                  <div className="flex flex-col items-center justify-center w-full">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Планировка участка</h3>
-                    <Move3D className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
-                    <p className="text-gray-600 text-center">
-                      Комплексная подготовка и выравнивание территории под застройку.
-                      Работаем с участками любой сложности и размера.
-                    </p>
-                  </div>
+              <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Планировка участка</h3>
+                  <Move3D className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
+                  <p className="text-gray-600 text-center">
+                    Комплексная подготовка и выравнивание территории под застройку.
+                    Работаем с участками любой сложности и размера.
+                  </p>
                 </div>
               </div>
             </div>
@@ -365,44 +314,29 @@ function App() {
 
             {/* Правая колонка */}
             <div className="w-full lg:w-1/2 space-y-8 lg:space-y-[300px] pl-16 lg:pl-8 mt-8 lg:mt-[300px] relative">
-              <div
-                data-card-id="4"
-                className={`transform transition-all duration-1000 delay-600 ${visibleCards.has(4)
-                  ? 'opacity-100 translate-x-0'
-                  : 'opacity-0 translate-x-20'
-                  }`}
-              >
-                <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
-                  <div className="flex flex-col items-center justify-center w-full space-y-6">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800">
-                      Монтаж / Демонтаж забора
-                    </h3>
-                    <div className="flex justify-center">
-                      <Fence className="w-12 h-12 text-[#166534]" />
-                    </div>
-                    <p className="text-gray-600 text-center">
-                      Установка и демонтаж заборов из различных материалов под ключ. Большой опыт работы с разными типами ограждений.
-                    </p>
+              {/* Карточки услуг */}
+              <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full space-y-6">
+                  <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800">
+                    Монтаж / Демонтаж забора
+                  </h3>
+                  <div className="flex justify-center">
+                    <Fence className="w-12 h-12 text-[#166534]" />
                   </div>
+                  <p className="text-gray-600 text-center">
+                    Установка и демонтаж заборов из различных материалов под ключ. Большой опыт работы с разными типами ограждений.
+                  </p>
                 </div>
               </div>
 
-              <div
-                data-card-id="5"
-                className={`transform transition-all duration-1000 delay-800 ${visibleCards.has(5)
-                  ? 'opacity-100 translate-x-0'
-                  : 'opacity-0 translate-x-20'
-                  }`}
-              >
-                <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
-                  <div className="flex flex-col items-center justify-center w-full">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Завоз материалов</h3>
-                    <Truck className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
-                    <p className="text-gray-600 text-center">
-                      Доставка строительных материалов точно в срок на ваш объект.
-                      Работаем с любыми объемами, предоставляем все документы.
-                    </p>
-                  </div>
+              <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
+                <div className="flex flex-col items-center justify-center w-full">
+                  <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Завоз материалов</h3>
+                  <Truck className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
+                  <p className="text-gray-600 text-center">
+                    Доставка строительных материалов точно в срок на ваш объект.
+                    Работаем с любыми объемами, предоставляем все документы.
+                  </p>
                 </div>
               </div>
             </div>
@@ -411,204 +345,79 @@ function App() {
       </div>
 
       {/* Схема работы */}
-      <div id="work-struture" className="bg-gradient-to-b from-[#F0F8FE] via-[#F7FBFE] to-[#e3eee5] py-12 md:py-24 relative overflow-hidden">
-        {/* Декоративные иконки в фоне - скрыты на мобильных */}
-        <div className="absolute inset-0 opacity-10 blur-[2px] hidden md:block">
-          {/* Левая сторона */}
-          <PhoneIncoming className="absolute w-20 h-20 lg:w-32 lg:h-32 text-gray-400 left-[5%] top-[10%] transform -rotate-12" strokeWidth={1} />
-          <Car className="absolute w-16 h-16 lg:w-28 lg:h-28 text-gray-400 left-[15%] top-[40%] transform rotate-6" strokeWidth={1} />
-          <Wallet className="absolute w-14 h-14 lg:w-24 lg:h-24 text-gray-400 left-[8%] top-[70%] transform -rotate-12" strokeWidth={1} />
+      <div className="container mx-auto px-4 md:px-6 max-w-[1440px] relative mt-24 md:mt-32 overflow-x-hidden">
+        <h2 className="text-3xl md:text-[2.9rem] font-bold text-black mb-16 md:mb-24 text-center">
+          <span className="relative inline-block">
+            СХЕМА РАБОТЫ
+            <span className="absolute -bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
+          </span>
+        </h2>
 
-          {/* Правая сторона */}
-          <FileAxis3D className="absolute w-20 h-20 lg:w-32 lg:h-32 text-gray-400 right-[10%] top-[15%] transform rotate-12" strokeWidth={1} />
-          <Truck className="absolute w-16 h-16 lg:w-28 lg:h-28 text-gray-400 right-[5%] top-[45%] transform -rotate-6" strokeWidth={1} />
-          <HandCoins className="absolute w-14 h-14 lg:w-24 lg:h-24 text-gray-400 right-[12%] top-[75%] transform rotate-12" strokeWidth={1} />
-        </div>
+        <div className="relative w-full h-[1000px] flex justify-center overflow-x-hidden">
+          <div className="relative w-[1000px]">
+            {/* Линии SVG */}
+            <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+              {/* Линия от 1 к 2 */}
+              <path d="M110,110 C300,110 500,150 790,160" className="stroke-[#166534] stroke-3 opacity-20 fill-none" />
+              
+              {/* Линия от 2 к 3 */}
+              <path d="M790,160 C400,190 250,350 40,370" className="stroke-[#166534] stroke-3 opacity-20 fill-none" />
+              
+              {/* Линия от 3 к 4 */}
+              <path d="M40,370 C300,400 500,420 790,430" className="stroke-[#166534] stroke-3 opacity-20 fill-none" />
+              
+              {/* Линия от 4 к 5 */}
+              <path d="M790,430 C700,530 650,650 500,690" className="stroke-[#166534] stroke-3 opacity-20 fill-none" />
+              
+              {/* Линия от 5 к 6 */}
+              <path d="M500,700 L500,890" className="stroke-[#166534] stroke-3 opacity-20 fill-none" />
+            </svg>
 
-        <div className="container mx-auto px-4 md:px-6 max-w-[1440px] relative mt-8 md:mt-12 overflow-x-hidden">
-          <h2 className="text-3xl md:text-[2.9rem] font-bold text-black mb-8 md:mb-12 text-center">
-            <span className="relative inline-block">
-              СХЕМА РАБОТЫ
-              <span className="absolute -bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
-            </span>
-          </h2>
-
-          {/* Мобильная версия */}
-          <div className="flex flex-col items-center space-y-16 md:hidden">
-            {/* Вертикальная линия */}
-            <div className="absolute left-1/2 top-[200px] bottom-32 w-1 bg-[#166534] opacity-50 rounded transform -translate-x-1/2"></div>
-            
-            {[
-              { num: 1, text: "Ваш звонок", icon: PhoneIncoming },
-              { num: 2, text: "Выезд специалиста", icon: Car },
-              { num: 3, text: "Определение стоимости и аванса", icon: Wallet },
-              { num: 4, text: "Планирование работ", icon: FileAxis3D },
-              { num: 5, text: "Демонтаж и вывоз мусора", icon: Truck },
-              { num: 6, text: "Оплата работы", icon: HandCoins }
-            ].map((item) => (
-              <div key={item.num} className="relative">
-                <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
-                  <item.icon className="w-8 h-8 text-[#166534]" />
-                </div>
-                <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                  {item.text}
-                </span>
+            {/* Круги с номерами и текстом */}
+            <div className="absolute left-[70px] top-[100px]">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold">1</div>
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-xl md:text-2xl font-bold text-gray-800">Ваш звонок</span>
               </div>
-            ))}
-          </div>
+            </div>
 
-          {/* Десктопная версия */}
-          <div className="relative w-full h-[1200px] justify-center overflow-x-hidden work-structure-container hidden md:flex">
-            <div className="relative w-[1000px]">
-              {/* Линии SVG */}
-              <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
-                {paths.map((path, index) => (
-                  <path 
-                    key={index} 
-                    d={path} 
-                    className="stroke-[#166534] opacity-50 fill-none"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                  />
-                ))}
-              </svg>
-
-              {/* Круги с номерами и текстом */}
-              <div className="absolute left-[70px] top-[100px]">
-                <div className="relative">
-                  <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
-                    <PhoneIncoming className="w-8 h-8 text-[#166534]" />
-                  </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Ваш звонок
-                  </span>
-                </div>
+            <div className="absolute left-[770px] top-[150px]">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold">2</div>
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-xl md:text-2xl font-bold text-gray-800">Выезд специалиста</span>
               </div>
+            </div>
 
-              <div className="absolute left-[770px] top-[200px]">
-                <div className="relative">
-                  <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
-                    <Car className="w-8 h-8 text-[#166534]" />
-                  </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Выезд специалиста
-                  </span>
-                </div>
+            <div className="absolute left-[20px] top-[360px]">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold">3</div>
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-xl md:text-2xl font-bold text-gray-800">Определение стоимости и аванса</span>
               </div>
+            </div>
 
-              <div className="absolute left-[20px] top-[450px]">
-                <div className="relative">
-                  <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
-                    <Wallet className="w-8 h-8 text-[#166534]" />
-                  </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Определение стоимости и аванса
-                  </span>
-                </div>
+            <div className="absolute left-[770px] top-[420px]">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold">4</div>
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-xl md:text-2xl font-bold text-gray-800">Планирование производственных работ</span>
               </div>
+            </div>
 
-              <div className="absolute left-[770px] top-[600px]">
-                <div className="relative">
-                  <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
-                    <FileAxis3D className="w-8 h-8 text-[#166534]" />
-                  </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Планирование работ
-                  </span>
-                </div>
+            <div className="absolute left-[490px] top-[680px]">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold">5</div>
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-xl md:text-2xl font-bold text-gray-800">Демонтаж и вывоз мусора</span>
               </div>
+            </div>
 
-              <div className="absolute left-[490px] top-[800px]">
-                <div className="relative">
-                  <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
-                    <Truck className="w-8 h-8 text-[#166534]" />
-                  </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Демонтаж и вывоз мусора
-                  </span>
-                </div>
-              </div>
-
-              <div className="absolute left-[490px] top-[1000px]">
-                <div className="relative">
-                  <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
-                    <HandCoins className="w-8 h-8 text-[#166534]" />
-                  </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Оплата работ
-                  </span>
-                </div>
+            <div className="absolute left-[490px] top-[880px]">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold">6</div>
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-xl md:text-2xl font-bold text-gray-800">Полная оплата работы</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-[#166534] text-white py-12 md:py-16">
-        <div className="container mx-auto px-4 md:px-6 max-w-[1440px]">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-            {/* Логотип и описание */}
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <span className="text-2xl md:text-3xl font-extrabold">
-                  СНОС<span className="text-[#CCFF00]" style={{ fontSize: "1.5em" }}>34</span>
-                </span>
-              </div>
-              <p className="text-gray-200 text-sm md:text-base">
-                Профессиональный демонтаж зданий и сооружений в Волгограде и Городищенском районе
-              </p>
-            </div>
-
-            {/* Навигация */}
-            <div>
-              <h3 className="text-lg font-bold mb-4">Навигация</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Главная</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Виды работ</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Схема работы</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Связаться с нами</a></li>
-              </ul>
-            </div>
-
-            {/* Услуги */}
-            <div>
-              <h3 className="text-lg font-bold mb-4">Услуги</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Снос зданий</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Вывоз мусора</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Планировка участка</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Монтаж / Демонтаж забора</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Завоз материалов</a></li>
-              </ul>
-            </div>
-
-            {/* Контакты */}
-            <div>
-              <h3 className="text-lg font-bold mb-4">Контакты</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center space-x-2">
-                  <PhoneIncoming className="w-5 h-5 text-[#CCFF00]" />
-                  <a href="tel:+79178888888" className="text-gray-200 hover:text-[#CCFF00] transition">+7 (917) 888-88-88</a>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <MapPinned className="w-5 h-5 text-[#CCFF00]" />
-                  <span className="text-gray-200">Волгоград</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <MapPinned className="w-5 h-5 text-[#CCFF00]" />
-                  <span className="text-gray-200">Городищенский район</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Нижняя часть футера */}
-          <div className="border-t border-white/10 mt-8 pt-8 text-center text-sm text-gray-300">
-            <p>© {new Date().getFullYear()} СНОС34. Все права защищены.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
