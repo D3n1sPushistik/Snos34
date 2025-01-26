@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { PhoneIncoming, Copy, MapPinned, Hammer, Fence, Trash, Truck, Move3D, Car, Wallet, HandCoins, FileAxis3D } from 'lucide-react';
+import { PhoneIncoming, Copy, MapPinned, Hammer, Fence, Trash, Truck, Move3D, Car, Wallet, HandCoins, FileAxis3D, Mail } from 'lucide-react';
 import { useBreakpoint } from './hooks/useBreakpoint';
 
 function App() {
@@ -7,6 +7,7 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
   const [paths, setPaths] = useState<string[]>([]);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -311,11 +312,11 @@ function App() {
               >
                 <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
                   <div className="flex flex-col items-center justify-center w-full">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Снос зданий</h3>
+                    <h3 className="text-xl md:text-4xl font-bold text-center text-gray-800 mb-4">Снос зданий</h3>
                     <Hammer className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
-                    <p className="text-gray-600 text-center">
+                    <p className="text-gray-600 md:text-2xl text-center">
                       Профессиональный демонтаж зданий и сооружений любой сложности.
-                      Гарантируем безопасность и оперативность выполнения работ.
+                      
                     </p>
                   </div>
                 </div>
@@ -330,11 +331,11 @@ function App() {
               >
                 <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
                   <div className="flex flex-col items-center justify-center w-full">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 text-gray-800 mb-4">Вывоз мусора</h3>
+                    <h3 className="text-xl md:text-4xl font-bold text-center text-gray-800 mb-4">Вывоз мусора</h3>
                     <Trash className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
-                    <p className="text-gray-600 text-center">
+                    <p className="text-gray-600 md:text-2xl text-center">
                       Оперативный вывоз строительного мусора и отходов с объекта.
-                      Предоставляем собственный транспорт и бригаду грузчиков.
+                      
                     </p>
                   </div>
                 </div>
@@ -349,11 +350,11 @@ function App() {
               >
                 <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
                   <div className="flex flex-col items-center justify-center w-full">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Планировка участка</h3>
+                    <h3 className="text-xl md:text-4xl font-bold text-center text-gray-800 mb-4">Планировка участка</h3>
                     <Move3D className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
-                    <p className="text-gray-600 text-center">
+                    <p className="text-gray-600 md:text-2xl text-center">
                       Комплексная подготовка и выравнивание территории под застройку.
-                      Работаем с участками любой сложности и размера.
+                     
                     </p>
                   </div>
                 </div>
@@ -361,10 +362,10 @@ function App() {
             </div>
 
             {/* Разделительная линия для десктопа */}
-            <div className="hidden lg:block w-1 bg-[#166534] opacity-50 rounded mx-8"></div>
+            <div className="hidden lg:block w-1.5 bg-[#166534] opacity-50 rounded mx-8"></div>
 
             {/* Правая колонка */}
-            <div className="w-full lg:w-1/2 space-y-8 lg:space-y-[300px] pl-16 lg:pl-8 mt-8 lg:mt-[300px] relative">
+            <div className="w-full lg:w-1/2 space-y-8 lg:space-y-[300px] pl-16 lg:pl-8 mt-8 lg:mt-[270px] relative">
               <div
                 data-card-id="4"
                 className={`transform transition-all duration-1000 delay-600 ${visibleCards.has(4)
@@ -374,14 +375,14 @@ function App() {
               >
                 <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
                   <div className="flex flex-col items-center justify-center w-full space-y-6">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800">
+                    <h3 className="text-xl md:text-4xl font-bold text-center text-gray-800">
                       Монтаж / Демонтаж забора
                     </h3>
                     <div className="flex justify-center">
                       <Fence className="w-12 h-12 text-[#166534]" />
                     </div>
-                    <p className="text-gray-600 text-center">
-                      Установка и демонтаж заборов из различных материалов под ключ. Большой опыт работы с разными типами ограждений.
+                    <p className="text-gray-600 md:text-2xl text-center">
+                      Установка и демонтаж заборов из различных материалов под ключ.
                     </p>
                   </div>
                 </div>
@@ -396,11 +397,11 @@ function App() {
               >
                 <div className="bg-white rounded-2xl p-6 md:p-12 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] group hover:shadow-lg transition-shadow">
                   <div className="flex flex-col items-center justify-center w-full">
-                    <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-4">Завоз материалов</h3>
+                    <h3 className="text-xl md:text-4xl font-bold text-center text-gray-800 mb-4">Завоз материалов</h3>
                     <Truck className="h-8 w-8 md:h-10 md:w-10 text-[#166534] mb-4 md:mb-6" />
-                    <p className="text-gray-600 text-center">
+                    <p className="text-gray-600 md:text-2xl text-center">
                       Доставка строительных материалов точно в срок на ваш объект.
-                      Работаем с любыми объемами, предоставляем все документы.
+                    
                     </p>
                   </div>
                 </div>
@@ -447,12 +448,12 @@ function App() {
               { num: 6, text: "Оплата работы", icon: HandCoins }
             ].map((item) => (
               <div key={item.num} className="relative">
+                <span className="absolute -top-24 left-1/2 -translate-x-1/2 text-xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
+                  {item.text}
+                </span>
                 <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
                   <item.icon className="w-8 h-8 text-[#166534]" />
                 </div>
-                <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                  {item.text}
-                </span>
               </div>
             ))}
           </div>
@@ -476,67 +477,67 @@ function App() {
               {/* Круги с номерами и текстом */}
               <div className="absolute left-[70px] top-[100px]">
                 <div className="relative">
+                  <span className="absolute -top-20 left-1/2 -translate-x-1/2 text-xl md:text-3xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
+                    Ваш звонок
+                  </span>
                   <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
                     <PhoneIncoming className="w-8 h-8 text-[#166534]" />
                   </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Ваш звонок
-                  </span>
                 </div>
               </div>
 
               <div className="absolute left-[770px] top-[200px]">
                 <div className="relative">
+                  <span className="absolute -top-20 left-1/2 -translate-x-1/2 text-xl md:text-3xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
+                    Выезд специалиста
+                  </span>
                   <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
                     <Car className="w-8 h-8 text-[#166534]" />
                   </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Выезд специалиста
-                  </span>
                 </div>
               </div>
 
               <div className="absolute left-[20px] top-[450px]">
                 <div className="relative">
+                  <span className="absolute -bottom-28 left-1/2 -translate-x-1/2 text-xl md:text-3xl font-bold text-gray-800 text-center max-w-[400px] leading-tight">
+                    Определение стоимости и аванса
+                  </span>
                   <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
                     <Wallet className="w-8 h-8 text-[#166534]" />
                   </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Определение стоимости и аванса
-                  </span>
                 </div>
               </div>
 
               <div className="absolute left-[770px] top-[600px]">
                 <div className="relative">
+                  <span className="absolute -top-20 left-1/2 -translate-x-1/2 text-xl md:text-3xl font-bold text-gray-800 text-center max-w-[300px] leading-tight">
+                    Планирование работ
+                  </span>
                   <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
                     <FileAxis3D className="w-8 h-8 text-[#166534]" />
                   </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Планирование работ
-                  </span>
                 </div>
               </div>
 
               <div className="absolute left-[490px] top-[800px]">
                 <div className="relative">
+                  <span className="absolute -top-28 left-1/2 -translate-x-1/2 text-xl md:text-3xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
+                    Демонтаж и вывоз мусора
+                  </span>
                   <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
                     <Truck className="w-8 h-8 text-[#166534]" />
                   </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Демонтаж и вывоз мусора
-                  </span>
                 </div>
               </div>
 
               <div className="absolute left-[490px] top-[1000px]">
                 <div className="relative">
+                  <span className="absolute -bottom-20 left-1/2 -translate-x-1/2 text-xl md:text-3xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
+                    Оплата работ
+                  </span>
                   <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
                     <HandCoins className="w-8 h-8 text-[#166534]" />
                   </div>
-                  <span className="absolute -bottom-24 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                    Оплата работ
-                  </span>
                 </div>
               </div>
             </div>
@@ -544,13 +545,80 @@ function App() {
         </div>
       </div>
 
+      {/* Обратная связь */}
+      <div id="feedback" className="bg-gradient-to-b from-[#e3eee5] via-[#F7FBFE] to-[#e3eee5] py-12 md:py-24 relative overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6 max-w-[1440px] relative">
+          <h2 className="text-3xl md:text-[2.9rem] font-bold text-black mb-8 md:mb-16 text-center">
+            <span className="relative inline-block">
+              СВЯЗАТЬСЯ С МЕНЕДЖЕРОМ
+              <span className="absolute -bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
+            </span>
+          </h2>
+
+          <div className="max-w-3xl mx-auto">
+            <form className="flex flex-col md:flex-row gap-4 items-end">
+              {/* Имя */}
+              <div className="flex-1">
+                <input
+                  type="text"
+                  className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-[#166534] focus:border-transparent outline-none transition"
+                  placeholder="Ваше имя"
+                />
+              </div>
+
+              {/* Телефон */}
+              <div className="flex-1">
+                <input
+                  type="tel"
+                  className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-[#166534] focus:border-transparent outline-none transition"
+                  placeholder="Телефон"
+                />
+              </div>
+
+              {/* Кнопка отправки */}
+              <button
+                type="submit"
+                className="w-full md:w-auto bg-[#CCFF00] hover:bg-[#FFD700]/90 text-black font-bold py-3 px-8 rounded transition-colors duration-300"
+              >
+                Заказать звонок
+              </button>
+            </form>
+
+            {/* Согласие на обработку данных */}
+            <div className="flex items-center gap-2 mt-4">
+              <input 
+                type="checkbox" 
+                id="privacy" 
+                className="w-4 h-4 rounded border-gray-300 text-[#166534] focus:ring-[#166534]"
+                defaultChecked 
+              />
+              <label htmlFor="privacy" className="text-sm text-gray-600">
+                Я принимаю условия{" "}
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsPrivacyModalOpen(true);
+                  }} 
+                  className="text-[#166534] hover:underline"
+                >
+                  пользовательского соглашения на обработку персональных данных
+                </button>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Интервал */}
+      <div className="h-16 md:h-24 bg-[#e3eee5]"></div>
+
       {/* Footer */}
       <footer className="bg-[#166534] text-white py-12 md:py-16">
         <div className="container mx-auto px-4 md:px-6 max-w-[1440px]">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
             {/* Логотип и описание */}
-            <div className="space-y-4">
-              <div className="flex items-center">
+            <div className="space-y-4 text-center">
+              <div className="flex items-center justify-center">
                 <span className="text-2xl md:text-3xl font-extrabold">
                   СНОС<span className="text-[#CCFF00]" style={{ fontSize: "1.5em" }}>34</span>
                 </span>
@@ -562,25 +630,12 @@ function App() {
 
             {/* Навигация */}
             <div>
-              <h3 className="text-lg font-bold mb-4">Навигация</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Главная</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Виды работ</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Схема работы</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Связаться с нами</a></li>
-              </ul>
+              
             </div>
 
             {/* Услуги */}
             <div>
-              <h3 className="text-lg font-bold mb-4">Услуги</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Снос зданий</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Вывоз мусора</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Планировка участка</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Монтаж / Демонтаж забора</a></li>
-                <li><a href="#" className="text-gray-200 hover:text-[#CCFF00] transition">Завоз материалов</a></li>
-              </ul>
+
             </div>
 
             {/* Контакты */}
@@ -592,12 +647,8 @@ function App() {
                   <a href="tel:+79178888888" className="text-gray-200 hover:text-[#CCFF00] transition">+7 (917) 888-88-88</a>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <MapPinned className="w-5 h-5 text-[#CCFF00]" />
-                  <span className="text-gray-200">Волгоград</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <MapPinned className="w-5 h-5 text-[#CCFF00]" />
-                  <span className="text-gray-200">Городищенский район</span>
+                  <Mail className="w-5 h-5 text-[#CCFF00]" />
+                  <a href="mailto:info@info.com" className="text-gray-200 hover:text-[#CCFF00] transition">info@info.com</a>
                 </li>
               </ul>
             </div>
@@ -609,6 +660,54 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Модальное окно с пользовательским соглашением */}
+      {isPrivacyModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-2xl max-h-[90vh] overflow-y-auto p-6 relative">
+            <button 
+              onClick={() => setIsPrivacyModalOpen(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              ✕
+            </button>
+            <h3 className="text-xl font-bold mb-4">Пользовательское соглашение</h3>
+            <div className="prose prose-sm">
+              <p className="mb-4">
+                Предоставляя свои персональные данные Пользователь даёт согласие на обработку, хранение и использование своих персональных данных на основании ФЗ № 152-ФЗ «О персональных данных» от 27.07.2006 г. в следующих целях:
+              </p>
+              <ul className="list-disc pl-5 mb-4">
+                <li>Осуществление клиентской поддержки</li>
+                <li>Получения Пользователем информации о маркетинговых событиях</li>
+                <li>Проведения аудита и прочих внутренних исследований с целью повышения качества предоставляемых услуг.</li>
+              </ul>
+              <p className="mb-4">
+                Под персональными данными подразумевается любая информация личного характера, позволяющая установить личность Пользователя/Покупателя такая как:
+              </p>
+              <ul className="list-disc pl-5 mb-4">
+                <li>Фамилия, Имя, Отчество</li>
+                <li>Дата рождения</li>
+                <li>Контактный телефон</li>
+                <li>Адрес электронной почты</li>
+                <li>Почтовый адрес</li>
+              </ul>
+              <p className="mb-4">
+                Персональные данные Пользователей хранятся исключительно на электронных носителях и обрабатываются с использованием автоматизированных систем, за исключением случаев, когда неавтоматизированная обработка персональных данных необходима в связи с исполнением требований законодательства.
+              </p>
+              <p className="mb-4">
+                Компания обязуется не передавать полученные персональные данные третьим лицам, за исключением следующих случаев:
+              </p>
+              <ul className="list-disc pl-5 mb-4">
+                <li>По запросам уполномоченных органов государственной власти РФ только по основаниям и в порядке, установленным законодательством РФ</li>
+                <li>Стратегическим партнерам, которые работают с Компанией для предоставления продуктов и услуг, или тем из них, которые помогают Компании реализовывать продукты и услуги потребителям. Мы предоставляем третьим лицам минимальный объем персональных данных, необходимый только для оказания требуемой услуги или проведения необходимой транзакции.</li>
+              </ul>
+              <p>
+                Компания оставляет за собой право вносить изменения в одностороннем порядке в настоящие правила, при условии, что изменения не противоречат действующему законодательству РФ. Изменения условий настоящих правил вступают в силу после их публикации на Сайте.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
