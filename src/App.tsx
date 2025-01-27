@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { PhoneIncoming, Copy, MapPinned, Hammer, Fence, Trash, Truck, Move3D, Car, Wallet, HandCoins, FileAxis3D, Mail } from 'lucide-react';
+import { PhoneIncoming, Copy, MapPinned, Hammer, Fence, Trash, Truck, Move3D, Car, Wallet, HandCoins, FileAxis3D, Mail, Phone, MapPin } from 'lucide-react';
 import { useBreakpoint } from './hooks/useBreakpoint';
 
 function App() {
@@ -8,6 +8,7 @@ function App() {
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
   const [paths, setPaths] = useState<string[]>([]);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [visiblePaths, setVisiblePaths] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -62,11 +63,11 @@ function App() {
       const c5 = { x: 490, y: 800 };
       const c6 = { x: 490, y: 1000 };
 
-      newPaths.push(`M${c1.x + 40},${c1.y + 40} C${c1.x + 50},${c1.y + 200}   ${c2.x - 50},${c2.y - 100}  ${c2.x + 40},${c2.y + 40}`);
-      newPaths.push(`M${c2.x + 40},${c2.y + 40} C${c2.x + 600},${c2.y + 350}  ${c3.x - 300},${c3.y - 150} ${c3.x + 40},${c3.y + 40}`);
-      newPaths.push(`M${c3.x + 40},${c3.y + 40} C${c3.x + 300},${c3.y + 50}   ${c4.x - 200},${c4.y}       ${c4.x + 40},${c4.y + 40}`);
-      newPaths.push(`M${c4.x + 40},${c4.y + 40} C${c4.x + 320},${c4.y + 100}  ${c5.x + 300},${c5.y + 130} ${c5.x + 40},${c5.y + 40}`);
-      newPaths.push(`M${c5.x + 40},${c5.y + 40} C${c5.x - 250},${c5.y + 20}    ${c5.x - 300},${c5.y + 200} ${c6.x + 40},${c6.y + 40}`);
+      newPaths.push(`M${c1.x + 40},${c1.y + 40} C${c1.x + 50},${c1.y + 200} ${c2.x - 50},${c2.y - 100} ${c2.x + 40},${c2.y + 40}`);
+      newPaths.push(`M${c2.x + 40},${c2.y + 40} C${c2.x + 100},${c2.y + 200} ${c3.x + 300},${c3.y - 100} ${c3.x + 40},${c3.y + 40}`);
+      newPaths.push(`M${c3.x + 40},${c3.y + 40} C${c3.x + 300},${c3.y + 50} ${c4.x - 200},${c4.y} ${c4.x + 40},${c4.y + 40}`);
+      newPaths.push(`M${c4.x + 40},${c4.y + 40} C${c4.x + 320},${c4.y + 100} ${c5.x + 300},${c5.y + 130} ${c5.x + 40},${c5.y + 40}`);
+      newPaths.push(`M${c5.x + 40},${c5.y + 40} C${c5.x - 250},${c5.y + 20} ${c5.x - 300},${c5.y + 200} ${c6.x + 40},${c6.y + 40}`);
 
       setPaths(newPaths);
     };
@@ -74,11 +75,35 @@ function App() {
     updatePaths();
     window.addEventListener('resize', updatePaths);
 
+    const handlePathScroll = () => {
+      const pathElements = document.querySelectorAll('.work-structure-path');
+      pathElements.forEach((path, index) => {
+        const rect = path.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        
+        // Вычисляем центр элемента относительно окна просмотра
+        const elementCenter = rect.top + rect.height / 2;
+        
+        // Проверяем, находится ли центр элемента в пределах 60% высоты экрана
+        const triggerPoint = windowHeight * 0.8;
+        const isVisible = elementCenter < triggerPoint && elementCenter > windowHeight * 0.2;
+        
+        if (isVisible) {
+          setVisiblePaths(prev => new Set([...prev, index]));
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handlePathScroll);
+    // Небольшая задержка перед первой проверкой, чтобы избежать преждевременной анимации
+    setTimeout(handlePathScroll, 100);
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
       observer.disconnect();
       window.removeEventListener('resize', updatePaths);
+      window.removeEventListener('scroll', handlePathScroll);
     };
   }, []);
 
@@ -138,7 +163,7 @@ function App() {
                 </span>
               </div>
 
-              <div className="hidden lg:flex items-center space-x-8 font-semibold">
+              <div className="hidden @1064:flex items-center space-x-8 font-semibold">
                 <a href="#" className="text-white hover:text-[#CCFF00] transition uppercase">Главная</a>
                 <a href="#" className="text-white hover:text-[#CCFF00] transition uppercase">Виды работ</a>
                 <a href="#" className="text-white hover:text-[#CCFF00] transition uppercase">Схема работы</a>
@@ -277,7 +302,7 @@ function App() {
         <div className="container mx-auto px-4 md:px-6 max-w-[1440px] relative">
           <h2 className="text-3xl md:text-[2.9rem] font-bold text-black mb-8 md:mb-16 text-center">
             {/* Мобильная версия */}
-            <div className="flex flex-col items-center md:hidden">
+            <div className="flex flex-col items-center @800:hidden">
               <span className="relative inline-block">
                 ВЫПОЛНЯЕМЫЕ
                 <span className="absolute bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
@@ -289,7 +314,7 @@ function App() {
             </div>
 
             {/* Десктопная версия */}
-            <span className="relative hidden md:inline-block">
+            <span className="relative hidden @800:inline-block mb-8 md:mb-16">
               ВЫПОЛНЯЕМЫЕ РАБОТЫ
               <span className="absolute -bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
             </span>
@@ -298,7 +323,7 @@ function App() {
           {/* Адаптивный контейнер для карточек */}
           <div className="flex flex-col lg:flex-row max-w-7xl mx-auto relative">
             {/* Вертикальная линия для мобильной и планшетной версии */}
-            <div className="absolute left-8 top-0 bottom-0 w-[2px] bg-[#166534] opacity-20 lg:hidden"></div>
+            <div className="absolute left-6 transform -translate-x-1/2 top-0 bottom-0 w-[4px] bg-[#166534] opacity-50 lg:hidden rounded"></div>
 
             {/* Левая колонка */}
             <div className="w-full lg:w-1/2 space-y-8 lg:space-y-[300px] pl-16 lg:pl-0 lg:pr-8 relative">
@@ -430,14 +455,14 @@ function App() {
           <h2 className="text-3xl md:text-[2.9rem] font-bold text-black mb-8 md:mb-12 text-center">
             <span className="relative inline-block">
               СХЕМА РАБОТЫ
-              <span className="absolute -bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
+              <span className="absolute -bottom-[-3px] md:-bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
             </span>
           </h2>
 
           {/* Мобильная версия */}
-          <div className="flex flex-col items-center space-y-16 md:hidden">
+          <div className="flex flex-col items-start pl-16 space-y-24 @1160:hidden pb-16">
             {/* Вертикальная линия */}
-            <div className="absolute left-1/2 top-[200px] bottom-32 w-1 bg-[#166534] opacity-50 rounded transform -translate-x-1/2"></div>
+            <div className="absolute left-[120px] top-[200px] h-[900px] w-1 bg-[#166534] opacity-50 transform -translate-x-1/2 rounded"></div>
             
             {[
               { num: 1, text: "Ваш звонок", icon: PhoneIncoming },
@@ -447,19 +472,18 @@ function App() {
               { num: 5, text: "Демонтаж и вывоз мусора", icon: Truck },
               { num: 6, text: "Оплата работы", icon: HandCoins }
             ].map((item) => (
-              <div key={item.num} className="relative">
-                <span className="absolute -top-24 left-1/2 -translate-x-1/2 text-xl font-bold text-gray-800 text-center max-w-[200px] leading-tight">
-                  {item.text}
-                </span>
+              <div key={item.num} className="relative w-full pr-4">
                 <div className="step-circle w-20 h-20 rounded-full flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-[#e8f5ee] to-[#166534]/20 shadow-lg">
                   <item.icon className="w-8 h-8 text-[#166534]" />
                 </div>
+                <span className="absolute top-1/2 left-24 -translate-y-1/2 text-sm sm:text-base md:text-xl font-bold text-gray-800 leading-tight text-center w-[180px] sm:w-[250px]">
+                  {item.text}
+                </span>
               </div>
             ))}
           </div>
-
           {/* Десктопная версия */}
-          <div className="relative w-full h-[1200px] justify-center overflow-x-hidden work-structure-container hidden md:flex">
+          <div className="relative w-full h-[1200px] justify-center overflow-x-hidden work-structure-container hidden @1160:flex">
             <div className="relative w-[1000px]">
               {/* Линии SVG */}
               <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
@@ -467,7 +491,9 @@ function App() {
                   <path 
                     key={index} 
                     d={path} 
-                    className="stroke-[#166534] opacity-50 fill-none"
+                    className={`stroke-[#166534] opacity-50 fill-none path-animation work-structure-path ${
+                      visiblePaths.has(index) ? 'animate' : ''
+                    }`}
                     strokeWidth="4"
                     strokeLinecap="round"
                   />
@@ -547,18 +573,30 @@ function App() {
 
       {/* Обратная связь */}
       <div id="feedback" className="bg-gradient-to-b from-[#e3eee5] via-[#F7FBFE] to-[#e3eee5] py-12 md:py-24 relative overflow-hidden">
+        
         <div className="container mx-auto px-4 md:px-6 max-w-[1440px] relative">
           <h2 className="text-3xl md:text-[2.9rem] font-bold text-black mb-8 md:mb-16 text-center">
-            <span className="relative inline-block">
-              СВЯЗАТЬСЯ С МЕНЕДЖЕРОМ
-              <span className="absolute -bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
-            </span>
+            <div className="flex flex-col items-center @800:hidden">
+                <span className="relative inline-block">
+                  СВЯЗАТЬСЯ С
+                  <span className="absolute bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
+                </span>
+                <span className="relative inline-block mt-1">
+                  МЕНЕДЖЕРОМ
+                  <span className="absolute bottom-1 left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
+                </span>
+              </div>
+              
+              <span className="relative hidden @800:inline-block">
+                СВЯЗАТЬСЯ С МЕНЕДЖЕРОМ
+                <span className="absolute -bottom-[4px] left-0 w-full h-2 bg-[#166534] opacity-50 rounded"></span>
+              </span>
           </h2>
 
-          <div className="max-w-3xl mx-auto">
-            <form className="flex flex-col md:flex-row gap-4 items-end">
+          <div className="max-w-3xl mx-auto w-full px-4">
+            <form className="flex flex-col md:flex-row gap-4 items-end w-full">
               {/* Имя */}
-              <div className="flex-1">
+              <div className="w-full md:flex-1">
                 <input
                   type="text"
                   className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-[#166534] focus:border-transparent outline-none transition"
@@ -567,7 +605,7 @@ function App() {
               </div>
 
               {/* Телефон */}
-              <div className="flex-1">
+              <div className="w-full md:flex-1">
                 <input
                   type="tel"
                   className="w-full px-4 py-3 rounded border border-gray-300 focus:ring-2 focus:ring-[#166534] focus:border-transparent outline-none transition"
@@ -585,24 +623,26 @@ function App() {
             </form>
 
             {/* Согласие на обработку данных */}
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-start gap-2 mt-4">
               <input 
                 type="checkbox" 
                 id="privacy" 
-                className="w-4 h-4 rounded border-gray-300 text-[#166534] focus:ring-[#166534]"
+                className="w-4 h-4 mt-1 rounded border-gray-300 text-[#166534] focus:ring-[#166534]"
                 defaultChecked 
               />
-              <label htmlFor="privacy" className="text-sm text-gray-600">
-                Я принимаю условия{" "}
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsPrivacyModalOpen(true);
-                  }} 
-                  className="text-[#166534] hover:underline"
-                >
-                  пользовательского соглашения на обработку персональных данных
-                </button>
+              <label htmlFor="privacy" className="text-sm text-gray-600 flex-1 text-center">
+                <span className="inline-block">
+                  Я принимаю условия{" "}
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsPrivacyModalOpen(true);
+                    }} 
+                    className="text-[#166534] hover:underline"
+                  >
+                    пользовательского соглашения на обработку персональных данных
+                  </button>
+                </span>
               </label>
             </div>
           </div>
@@ -639,18 +679,23 @@ function App() {
             </div>
 
             {/* Контакты */}
-            <div>
-              <h3 className="text-lg font-bold mb-4">Контакты</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center space-x-2">
-                  <PhoneIncoming className="w-5 h-5 text-[#CCFF00]" />
-                  <a href="tel:+79178888888" className="text-gray-200 hover:text-[#CCFF00] transition">+7 (917) 888-88-88</a>
-                </li>
-                <li className="flex items-center space-x-2">
+            <div className="flex flex-col items-center md:items-start">
+              <h3 className="text-xl font-bold mb-4">Контакты</h3>
+              <div className="space-y-2 flex flex-col items-start">
+                <p className="flex items-center gap-2">
+                  <Phone className="w-5 h-5 text-[#CCFF00]" />
+                  <a href="tel:+79093806144" className="hover:text-[#CCFF00] transition-colors">
+                    +7 (909) 380-61-44
+                  </a>
+                </p>
+                <p className="flex items-center gap-2">
                   <Mail className="w-5 h-5 text-[#CCFF00]" />
-                  <a href="mailto:info@info.com" className="text-gray-200 hover:text-[#CCFF00] transition">info@info.com</a>
-                </li>
-              </ul>
+                  <a href="mailto:info@snos34.ru" className="hover:text-[#CCFF00] transition-colors">
+                    info@snos34.ru
+                  </a>
+                </p>
+
+              </div>
             </div>
           </div>
 
@@ -663,7 +708,15 @@ function App() {
 
       {/* Модальное окно с пользовательским соглашением */}
       {isPrivacyModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+          onClick={(e) => {
+            // Закрываем модальное окно только если клик был на внешней области
+            if (e.target === e.currentTarget) {
+              setIsPrivacyModalOpen(false);
+            }
+          }}
+        >
           <div className="bg-white rounded-lg max-w-2xl max-h-[90vh] overflow-y-auto p-6 relative">
             <button 
               onClick={() => setIsPrivacyModalOpen(false)}

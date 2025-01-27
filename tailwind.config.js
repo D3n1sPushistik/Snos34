@@ -11,6 +11,9 @@ export default {
       md: `${breakpoints.mobile}px`,
       lg: `${breakpoints.tablet}px`,
       xl: `${breakpoints.desktop}px`,
+      '@1064': '1064px',
+      '@1160': '1160px',
+      '@800': '800px',
     },
     extend: {
       backgroundImage: {
